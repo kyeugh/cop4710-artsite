@@ -1,10 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
-class Artist(models.Model):
+class Artist(AbstractUser):
     """A website user who can post and collect artworks."""
     # https://www.smashingmagazine.com/2020/02/django-highlights-user-models-authentication/
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField()
     location = models.CharField(max_length = 100, blank=True)
     pronouns = models.IntegerField(
