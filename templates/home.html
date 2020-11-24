@@ -3,11 +3,21 @@
 {% block title %}artdock{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  <p>Hi {{ user.username }}!</p>
-  <p><a href="{% url 'logout' %}">Log Out</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
-{% endif %}
+    <h1>artdock</h1>
+    <h2>Latest artworks</h2>
+    {% for artwork in latest %}
+        <figure>
+
+            <a href="{{ artwork.get_absolute_url }}">
+                <img src="{{ artwork.image.url }}" />
+            </a>
+            <br />
+            <caption>
+                <a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a>
+                <br />
+                by <a href="{{ artwork.artist.get_absolute_url }}">{{ artwork.artist }}</a>
+            </caption>
+        </figure>
+    </a>
+    {% endfor %}
 {% endblock %}

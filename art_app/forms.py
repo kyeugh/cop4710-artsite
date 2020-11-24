@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
+from .models import Artwork
 
 class RegistrationForm(UserCreationForm):
     pronouns = forms.ChoiceField(
@@ -15,3 +16,10 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         fields = ("username", "email", "pronouns", "password1", "password2")
+
+class ArtworkForm(forms.ModelForm):
+    """Form to submit a new Artwork."""
+    tags = forms.CharField()
+    class Meta:
+        model = Artwork
+        fields = ("image", "title", "caption")

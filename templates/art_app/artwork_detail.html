@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ artwork }} - artdock{% endblock %}
+
+{% block content %}
+    <h1><a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a></h1>
+    <h2>by <a href="{{ artwork.artist.get_absolute_url}}">{{ artwork.artist.username }}</a></h2>
+    <p>Posted {{ artwork.created }}</p>
+    <img src="{{ artwork.image.url }}" />
+    <p>{{ artwork.caption }}</p>
+    <h3>Tags</h3>
+    <ul>
+        {% for tag in artwork.tags.all %}
+            <li><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
