@@ -1,0 +1,136 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    background:#e8f0ff;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* navigation bar */
+
+nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    padding: 1rem;
+    background: #366ed8;
+    color: #d6d7dd;
+}
+
+nav a {
+    text-decoration: none;
+    color: #d6d7dd;
+}
+
+nav a.username {
+    text-decoration: underline;
+}
+
+nav a:hover {
+    color: white;
+}
+
+nav > ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+nav > ul > li {
+    padding: 0 2rem;
+}
+
+/* main */
+
+main {
+    width: 80%;
+    background: white;
+    padding: 1rem 7rem;
+    flex: 1 1 auto;
+}
+
+main a {
+    text-decoration: none;
+}
+
+/* art cards */
+
+figure {
+    width: max-content;
+    display: inline-block;
+}
+
+figure img {
+    max-height: 400px;
+}
+
+figure figcaption {
+    text-align: center;
+    display: flex;
+    align-items: baseline;
+}
+
+figure figcaption > p {
+    margin-left: 1em;
+}
+
+/* art page */
+.tagline {
+    display: flex;
+    align-items: baseline;
+}
+
+.tagline > * {
+    margin-bottom: 0;
+}
+
+.tagline h1 a {
+    color: black;
+}
+
+.tagline h2 {
+    margin-left: .5em;
+}
+
+img.artwork-full {
+    display: block;
+    margin: 0 auto;
+    max-height: 500px;
+}
+
+section.details {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.tags {
+    display: flex;
+    align-items: baseline;
+}
+
+.tags > ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.tags > ul > li > a {
+    text-decoration: none;
+}
+
+.tags > ul > li {
+    margin: 0 .25rem;
+}
