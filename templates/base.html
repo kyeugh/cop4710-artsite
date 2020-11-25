@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}artdock{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        function vote_increment(url, pk) {
+            window.open(url);
+            $.get('index/'+pk+'/', function (data) {
+                alert("Vote Incremented!");
+            });
+        }
+    </script>
 </head>
 <body>
     {% block menu %}
@@ -15,6 +24,7 @@
         {% if user.is_authenticated %}
             <li>Hi <a href="{{ user.get_absolute_url }}" class="username">{{ user.username }}</a>!</li>
             <li><a href="{% url 'upload' %}">Upload</a></li>
+            <li><a href="{% url 'explore' %}">Explore</a></li>
             <li><a href="{% url 'logout' %}">Log Out</a></li>
         {% else %}
             <li><a href="{% url 'login' %}">Log In</a></li>
