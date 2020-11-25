@@ -7,11 +7,17 @@ from django.views.generic.detail import DetailView
 
 from art_app.forms import RegistrationForm, ArtworkForm
 from art_app.models import *
+from django.db.models import F
+
 
 # Create your views here.
 def index(request):
-    latest = Artwork.objects.all().order_by('-created')[:10]
+    # if request.method == 'POST' and 'increment_votes' in request.POST:
+    #    Artwork.objects.all().filter(id__in=F(1)).update(votes=F('votes') + 1)
+    latest = Artwork.objects.all().order_by('-votes')[:10]
+
     return render(request, 'home.html', {"latest": latest})
+
 
 def register(request):
     if request.method == "POST":
@@ -26,6 +32,7 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, "registration/register.html", {"form": form})
+
 
 @login_required
 def new_artwork(request):
@@ -51,8 +58,20 @@ def new_artwork(request):
         form = ArtworkForm()
     return render(request, "upload.html", {"form": form})
 
+
+def explore(request):
+    tags = Tag.objects.all()
+    # return render(request, 'home.html', {"latest": latest})
+    return render(request, "explore.html", {"tags": tags})
+
+
+# def vote(artId):
+ #   Artwork.objects.filter(id__in=artId).update(votes=F('votes') + 1)
+
+
 class ArtworkDetailView(DetailView):
     model = Artwork
+
 
 class ArtistDetailView(DetailView):
     model = Artist
@@ -61,6 +80,7 @@ class ArtistDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["artworks"] = Artwork.objects.filter(artist=context["artist"])
         return context
+
 
 class TagDetailView(DetailView):
     model = Tag

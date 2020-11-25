@@ -15,6 +15,11 @@
                 <h3><a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a></h3>
                 <p>by <a href="{{ artwork.artist.get_absolute_url }}">{{ artwork.artist }}</a></p>
             </figcaption>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="increment_votes">Run script</button>
+            </form>
+            <p><a href="{{ artwork.votes.get_absolute_url }}">{{ artwork.votes }}</a></p>
         </figure>
     {% endfor %}
 {% endblock %}
