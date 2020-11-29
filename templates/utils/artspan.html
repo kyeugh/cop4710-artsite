@@ -1,0 +1,20 @@
+{% load art_tags %}
+<span class="art-wrapper">
+    {% for artwork in artworks %}
+        <figure>
+            <a href="{{ artwork.get_absolute_url }}">
+                <img src="{{ artwork.image.url }}" />
+            </a>
+            <br />
+            <figcaption>
+                <h3><a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a></h3>
+                <p>by <a href="{{ artwork.artist.get_absolute_url }}">{{ artwork.artist }}</a></p>
+                {% csrf_token %}
+                <span class="votes">
+                    <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{ artwork.slug }}{% if artwork|liked_by:user %} liked{% endif %}""></button>
+                    <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
+                </span>
+            </figcaption>
+        </figure>
+    {% endfor %}
+    </span>

@@ -1,28 +1,8 @@
 {% extends 'base.html' %}
-{% load art_tags %}
 
 {% block title %}{{ artist }} - artdock{% endblock %}
 
 {% block content %}
     <h1><a href="{{ artist.get_absolute_url }}">{{ artist.username }}</a></h1>
-    {% for artwork in artworks %}
-            <figure>
-                <a href="{{ artwork.get_absolute_url }}">
-                    <img src="{{ artwork.image.url }}" />
-                </a>
-                <br />
-                <figcaption>
-                    <a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a>
-                    {% csrf_token %}
-                    <span class="votes">
-                        <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{ artwork.slug }}{% if artwork|liked_by:user %} liked{% endif %}""></button>
-                        <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
-                    </span>
-                </figcaption>
-            </figure>
-        </a>
-    {% endfor %}
-    <script>
-        {% include 'utils/vote.js' %}
-    </script>
+    {% include 'utils/artspan.html' with artworks=artworks %}
 {% endblock %}
