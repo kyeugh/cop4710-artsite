@@ -6,15 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}artdock{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script>
-        function vote_increment(url, pk) {
-            window.open(url);
-            $.get('index/'+pk+'/', function (data) {
-                alert("Vote Incremented!");
-            });
-        }
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     {% block menu %}

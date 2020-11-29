@@ -115,6 +115,26 @@ section.details {
     margin: 0 auto;
 }
 
+button.vote-button {
+    background: none;
+    border: none;
+}
+
+button.vote-button::before {
+    content: "♡";
+    color: red;
+    font-size: 2em;
+}
+
+button.vote-button.liked::before {
+    content: "♥";
+}
+
+.votes {
+    display: flex;
+    align-items: center;
+}
+
 .tags {
     display: flex;
     align-items: baseline;

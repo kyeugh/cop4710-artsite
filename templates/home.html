@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load art_tags %}
 
 {% block title %}artdock{% endblock %}
 
@@ -14,12 +15,33 @@
             <figcaption>
                 <h3><a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a></h3>
                 <p>by <a href="{{ artwork.artist.get_absolute_url }}">{{ artwork.artist }}</a></p>
-            </figcaption>
-            <form method="post">
                 {% csrf_token %}
-                <button type="submit" name="increment_votes">Run script</button>
-            </form>
-            <p><a href="{{ artwork.votes.get_absolute_url }}">{{ artwork.votes }}</a></p>
+                <span class="votes">
+                    <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{ artwork.slug }}{% if artwork|liked_by:user %} liked{% endif %}""></button>
+                    <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
+                </span>
+            </figcaption>
         </figure>
     {% endfor %}
+    <h2>Hot artworks</h2>
+    {% for artwork in hot %}
+        <figure>
+            <a href="{{ artwork.get_absolute_url }}">
+                <img src="{{ artwork.image.url }}" />
+            </a>
+            <br />
+            <figcaption>
+                <h3><a href="{{ artwork.get_absolute_url }}">{{ artwork.title }}</a></h3>
+                <p>by <a href="{{ artwork.artist.get_absolute_url }}">{{ artwork.artist }}</a></p>
+                {% csrf_token %}
+                <span class="votes">
+                    <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{ artwork.slug }}{% if artwork|liked_by:user %} liked{% endif %}""></button>
+                    <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
+                </span>
+            </figcaption>
+        </figure>
+    {% endfor %}
+    <script>
+        {% include 'utils/vote.js' %}
+    </script>
 {% endblock %}

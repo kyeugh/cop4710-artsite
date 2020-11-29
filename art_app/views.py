@@ -1,22 +1,31 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
+
+from django.http import HttpResponse
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
+from django.views.decorators.http import require_POST
 
 from django.views.generic.detail import DetailView
 
 from art_app.forms import RegistrationForm, ArtworkForm
 from art_app.models import *
-from django.db.models import F
+from django.db.models import F, Count
 
 
 # Create your views here.
 def index(request):
-    # if request.method == 'POST' and 'increment_votes' in request.POST:
-    #    Artwork.objects.all().filter(id__in=F(1)).update(votes=F('votes') + 1)
-    latest = Artwork.objects.all().order_by('-votes')[:10]
-
-    return render(request, 'home.html', {"latest": latest})
+    latest = Artwork.objects.all().order_by('-created')[:10]
+    today = Artwork.objects.filter(created__gte = timezone.now().replace(hour=0,minute=0,second=0)).distinct()
+    print(today)
+    hot = today.annotate(vote_count=Count('votes')).order_by('-vote_count')[:10]
+    print(hot)
+    return render(request, 'home.html', {"latest": latest, "hot": hot})
 
 
 def register(request):
@@ -42,7 +51,6 @@ def new_artwork(request):
         if form.is_valid():
             artwork = form.save(commit=False)
             artwork.artist = request.user
-            artwork.votes = 0
             artwork.save()
 
             raw_tags = form.cleaned_data["tags"]
@@ -51,6 +59,7 @@ def new_artwork(request):
             tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
             print(tags)
             artwork.tags.add(*tags)
+            artwork.votes.add(request.user)
             artwork.save()
 
             return redirect("home")
@@ -65,8 +74,23 @@ def explore(request):
     return render(request, "explore.html", {"tags": tags})
 
 
-# def vote(artId):
- #   Artwork.objects.filter(id__in=artId).update(votes=F('votes') + 1)
+@login_required
+@require_POST
+def vote(request):
+    if request.method == "POST":
+        user = request.user
+        slug = request.POST.get("slug", None)
+        artwork = get_object_or_404(Artwork, slug=slug)
+
+        if artwork.votes.filter(id=user.id).exists():
+            artwork.votes.remove(user)
+            message = "You unliked the post."
+        else:
+            artwork.votes.add(user)
+            message = "You liked the post."
+
+    ctx = {"votes_count": artwork.total_votes, "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
 class ArtworkDetailView(DetailView):

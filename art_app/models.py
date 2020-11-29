@@ -59,7 +59,11 @@ class Artwork(models.Model):
     image = models.ImageField()
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True)
-    votes = models.IntegerField()
+    votes = models.ManyToManyField(Artist, related_name='likes')
+
+    @property
+    def total_votes(self):
+        return self.votes.count()
 
     def __str__(self):
         return "{0.title} by {0.artist.username}".format(self)
@@ -71,7 +75,6 @@ class Artwork(models.Model):
 
     def get_absolute_url(self):
         return f"/art/{self.slug}"
-
 
 class Collection(models.Model):
     """A collection of many artworks, maintained by an artist."""

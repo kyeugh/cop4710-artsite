@@ -12,4 +12,5 @@ urlpatterns = [
          views.ArtistDetailView.as_view(), name='artist-detail'),
     path("tags/<slug:slug>", views.TagDetailView.as_view(), name="tag-detail"),
     path("explore", views.explore, name="explore"),
+    path("vote", views.vote, name="vote")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
