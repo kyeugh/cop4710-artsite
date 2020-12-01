@@ -13,19 +13,23 @@ from django.views.decorators.http import require_POST
 
 from django.views.generic.detail import DetailView
 
-from art_app.forms import RegistrationForm, ArtworkForm
+from art_app.forms import RegistrationForm, ArtworkForm, CollectionForm
 from art_app.models import *
 from django.db.models import F, Count
 
 
 # Create your views here.
 def index(request):
+
     latest = Artwork.objects.all().order_by('-created')[:10]
-    today = Artwork.objects.filter(created__gte = timezone.now().replace(hour=0,minute=0,second=0)).distinct()
+    today = Artwork.objects.filter(created__gte=timezone.now().replace(
+        hour=0, minute=0, second=0)).distinct()
     print(today)
-    hot = today.annotate(vote_count=Count('votes')).order_by('-vote_count')[:10]
+    hot = today.annotate(vote_count=Count(
+        'votes')).order_by('-votes')[:10]
     print(hot)
-    return render(request, 'home.html', {"latest": latest, "hot": hot})
+    collections = Collection.objects.all()
+    return render(request, 'home.html', {"latest": latest, "hot": hot, "collections": collections})
 
 
 def register(request):
@@ -91,6 +95,44 @@ def vote(request):
 
     ctx = {"votes_count": artwork.total_votes, "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
+@login_required
+@require_POST
+def save(request):
+    # need to add to collection_artwork the collection id and artwork id
+    collection = request.POST['save-dropdown']
+    #artwork = request.POST['']
+    return HttpResponse(collection)
+
+
+def contest(request):
+    #artworks = Artwork.objects.filter(tags="paint")
+    # needs to filter by the tag instead of getting all
+    artworks = Artwork.objects.all().order_by('-votes')[:10]
+    return render(request, "contest.html", {"artworks": artworks})
+    # def get_context_data(self, **kwargs):
+    #    context = super().get_context_data(**kwargs)
+    #    context["artworks"] = Artwork.objects.filter(tags__in=[context["tag"]])
+    #    return context
+
+
+@login_required
+def CreateCollection(request):
+    collections = Collection.objects.all()
+    if request.method == "POST":
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.name = form.cleaned_data.get("name")
+            collection.artist = request.user
+            collection.save()
+
+            return redirect("collections")
+
+    else:
+        form = CollectionForm()
+    return render(request, "collections.html", {"form": form, "collections": collections})
 
 
 class ArtworkDetailView(DetailView):

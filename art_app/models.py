@@ -76,12 +76,22 @@ class Artwork(models.Model):
     def get_absolute_url(self):
         return f"/art/{self.slug}"
 
+
 class Collection(models.Model):
     """A collection of many artworks, maintained by an artist."""
     name = models.CharField(max_length=200)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     artworks = models.ManyToManyField(Artwork)
+    slug = models.SlugField(null=False, unique=True)
     tags = models.ManyToManyField(Tag)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = get_unique_slug(self, 'name', 'slug')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return "{0.name} by {0.artist.username}".format(self)
+
+# class CollectionArtworks(models.Model):
+ #   collection =

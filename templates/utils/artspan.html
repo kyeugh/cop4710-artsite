@@ -14,6 +14,18 @@
                     <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{ artwork.slug }}{% if artwork|liked_by:user %} liked{% endif %}""></button>
                     <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
                 </span>
+                <form action="/save-to-collection" method="post">
+                  {% csrf_token %}
+                    <select id="save-dropdown" name="save-dropdown">
+                        <option value="" selected disabled hidden>Select collection</option>
+                        {% for collection in collections %}
+                            <option value="{{collection}}">{{collection}}</option>
+                        {% endfor %}
+                    </select>
+                    <span>
+                        <button type="submit" name="{{ artwork.slug }}" class="save-button save-button-{{ artwork.slug }}""></button>
+                    </span>
+                </form>
             </figcaption>
         </figure>
     {% endfor %}

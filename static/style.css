@@ -1,168 +1,171 @@
 * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-
 body {
-    width: 100%;
-    min-height: 100vh;
-    background:#e8f0ff;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #e8f0ff;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* navigation bar */
 
 nav {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    padding: 1rem;
-    background: #366ed8;
-    color: #d6d7dd;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 1rem;
+  background: #366ed8;
+  color: #d6d7dd;
 }
 
 nav a {
-    text-decoration: none;
-    color: #d6d7dd;
+  text-decoration: none;
+  color: #d6d7dd;
 }
 
 nav a.username {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 nav a:hover {
-    color: white;
+  color: white;
 }
 
 nav > ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
+  list-style: none;
+  display: flex;
+  align-items: center;
 }
 
 nav > ul > li {
-    padding: 0 2rem;
+  padding: 0 2rem;
 }
 
 /* main */
 
 main {
-    width: 80%;
-    background: white;
-    padding: 1rem 7rem;
-    flex: 1 1 auto;
+  width: 80%;
+  background: white;
+  padding: 1rem 7rem;
+  flex: 1 1 auto;
 }
 
 main a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 /* art cards */
 
 .art-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .art-wrapper figure {
-    max-width: 25%;
-    display: flex;
-    flex-direction: column;
+  max-width: 25%;
+  display: flex;
+  flex-direction: column;
 }
 
 .art-wrapper figure > a {
-    margin: auto 0;
+  margin: auto 0;
 }
 
 .art-wrapper figure img {
-    max-height: 400px;
-    max-width: 100%;
+  max-height: 400px;
+  max-width: 100%;
 }
 
 .art-wrapper figure figcaption {
-    text-align: center;
-    display: flex;
-    align-items: baseline;
+  text-align: center;
+  display: flex;
+  align-items: baseline;
 }
 
 .art-wrapper figure figcaption > p {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 /* art page */
 .tagline {
-    display: flex;
-    align-items: baseline;
+  display: flex;
+  align-items: baseline;
 }
 
 .tagline > * {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .tagline h1 a {
-    color: black;
+  color: black;
 }
 
 .tagline h2 {
-    margin-left: .5em;
+  margin-left: 0.5em;
 }
 
 img.artwork-full {
-    display: block;
-    margin: 0 auto;
-    max-height: 500px;
+  display: block;
+  margin: 0 auto;
+  max-height: 500px;
 }
 
 section.details {
-    width: 80%;
-    margin: 0 auto;
+  width: 80%;
+  margin: 0 auto;
 }
 
 button.vote-button {
-    background: none;
-    border: none;
+  background: none;
+  border: none;
 }
 
 button.vote-button::before {
-    content: "♡";
-    color: red;
-    font-size: 2em;
+  content: "♡";
+  color: red;
+  font-size: 2em;
 }
 
 button.vote-button.liked::before {
-    content: "♥";
+  content: "♥";
+}
+
+button.save-button::before {
+  content: "🔽";
 }
 
 .votes {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .tags {
-    display: flex;
-    align-items: baseline;
+  display: flex;
+  align-items: baseline;
 }
 
 .tags > ul {
-    list-style: none;
-    display: flex;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
 }
 
 .tags > ul > li > a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .tags > ul > li {
-    margin: 0 .25rem;
+  margin: 0 0.25rem;
 }
