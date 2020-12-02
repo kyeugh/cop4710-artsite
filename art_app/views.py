@@ -117,6 +117,12 @@ def contest(request):
     #    return context
 
 
+def leaderboard(request):
+    # need to order artists by the number of votes that they got
+    artists = Artist.objects.all()  # .order_by('-votes')[:10]
+    return render(request, "leaderboard.html", {"artists": artists})
+
+
 @login_required
 def CreateCollection(request):
     collections = Collection.objects.all()

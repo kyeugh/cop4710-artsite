@@ -13,6 +13,7 @@ urlpatterns = [
     path("tags/<slug:slug>", views.TagDetailView.as_view(), name="tag-detail"),
     path("explore", views.explore, name="explore"),
     path("contest", views.contest, name="contest"),
+    path("leaderboard", views.leaderboard, name="leaderboard"),
     path("vote", views.vote, name="vote"),
     path("collections",
          views.CreateCollection, name="collections"),
