@@ -91,6 +91,7 @@ main a {
   text-align: center;
   display: flex;
   align-items: baseline;
+  justify-content: space-around;
 }
 
 .art-wrapper figure figcaption > p {
@@ -126,6 +127,21 @@ section.details {
   margin: 0 auto;
 }
 
+.interactions {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.votes {
+  display: flex;
+  align-items: baseline;
+}
+
+.votes p {
+  margin: 0;
+}
+
 button.vote-button {
   background: none;
   border: none;
@@ -141,8 +157,25 @@ button.vote-button.liked::before {
   content: "♥";
 }
 
-button.save-button::before {
-  content: "🔽";
+button.vote-button:hover::before, button.vote-button.liked:hover::before {
+  color: rgb(255, 116, 116);
+  cursor: pointer;
+}
+
+button.save-button {
+  background: none;
+  border: none;
+  color: #366ed8;
+  font-size: 2em;
+}
+
+button.save-button:hover {
+  color: #5883d3;
+  cursor: pointer;
+}
+
+p.caption {
+  text-align: center;
 }
 
 .votes {
@@ -150,22 +183,19 @@ button.save-button::before {
   align-items: center;
 }
 
-.tags {
+ul.tags {
   display: flex;
   align-items: baseline;
-}
-
-.tags > ul {
   list-style: none;
   display: flex;
   padding: 0;
   margin: 0;
 }
 
-.tags > ul > li > a {
+ul.tags > li > a {
   text-decoration: none;
 }
 
-.tags > ul > li {
+ul.tags > li {
   margin: 0 0.25rem;
 }

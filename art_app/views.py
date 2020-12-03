@@ -22,14 +22,17 @@ from django.db.models import F, Count
 def index(request):
 
     latest = Artwork.objects.all().order_by('-created')[:10]
-    today = Artwork.objects.filter(created__gte=timezone.now().replace(
-        hour=0, minute=0, second=0)).distinct()
-    print(today)
-    hot = today.annotate(vote_count=Count(
-        'votes')).order_by('-votes')[:10]
-    print(hot)
-    collections = Collection.objects.all()
-    return render(request, 'home.html', {"latest": latest, "hot": hot, "collections": collections})
+    today = Artwork.objects.filter(
+        created__gte=timezone.now().replace(
+            hour=0, minute=0, second=0
+            )
+        ).distinct()
+    hot = today.annotate(vote_count=Count('votes')).order_by('-votes')[:10]
+    if request.user.is_authenticated:
+        user_collections = Collection.objects.filter(artist=request.user)
+    else:
+        user_collections = None
+    return render(request, 'home.html', {"latest": latest, "hot": hot, "user_collections": user_collections})
 
 
 def register(request):
@@ -61,7 +64,6 @@ def new_artwork(request):
             tags = raw_tags.split(",")
             tags = [tag.lower() for tag in tags]
             tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
-            print(tags)
             artwork.tags.add(*tags)
             artwork.votes.add(request.user)
             artwork.save()
@@ -70,6 +72,32 @@ def new_artwork(request):
     else:
         form = ArtworkForm()
     return render(request, "upload.html", {"form": form})
+
+
+@login_required
+def new_collection(request):
+    collections = Collection.objects.all()
+    if request.method == "POST":
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.name = form.cleaned_data.get("name")
+            collection.artist = request.user
+            collection.save()
+
+            raw_tags = form.cleaned_data["tags"]
+            tags = raw_tags.split(",")
+            tags = [tag.lower() for tag in tags]
+            tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
+            collection.tags.add(*tags)
+
+            collection.save()
+
+            return redirect("/collections/" + collection.slug)
+
+    else:
+        form = CollectionForm()
+    return render(request, "create-collection.html", {"form": form, "collections": collections})
 
 
 def explore(request):
@@ -96,14 +124,20 @@ def vote(request):
     ctx = {"votes_count": artwork.total_votes, "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
-
 @login_required
 @require_POST
 def save(request):
-    # need to add to collection_artwork the collection id and artwork id
-    collection = request.POST['save-dropdown']
-    #artwork = request.POST['']
-    return HttpResponse(collection)
+    ctx = {"added": False}
+    if request.method == "POST":
+        artwork_slug = request.POST.get("artwork-slug", None)
+        collection_slug = request.POST.get("collection-slug", None)
+        artwork = get_object_or_404(Artwork, slug=artwork_slug)
+        collection = get_object_or_404(Collection, slug=collection_slug)
+        if artwork not in collection.artworks.all():
+            collection.artworks.add(artwork)
+            ctx["added"] = collection.get_absolute_url()
+        collection.save()
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
 def contest(request):
@@ -117,26 +151,22 @@ def contest(request):
     #    return context
 
 
-@login_required
-def CreateCollection(request):
-    collections = Collection.objects.all()
-    if request.method == "POST":
-        form = CollectionForm(request.POST)
-        if form.is_valid():
-            collection = form.save(commit=False)
-            collection.name = form.cleaned_data.get("name")
-            collection.artist = request.user
-            collection.save()
-
-            return redirect("collections")
-
-    else:
-        form = CollectionForm()
-    return render(request, "collections.html", {"form": form, "collections": collections})
-
-
 class ArtworkDetailView(DetailView):
     model = Artwork
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context["user_collections"] = Collection.objects.filter(artist=self.request.user)
+        return context
+
+class CollectionDetailView(DetailView):
+    model = Collection
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["artworks"] = get_object_or_404(Collection, slug=context["collection"].slug).artworks.all()
+        return context
 
 
 class ArtistDetailView(DetailView):
@@ -145,6 +175,7 @@ class ArtistDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["artworks"] = Artwork.objects.filter(artist=context["artist"])
+        context["collections"] = Collection.objects.filter(artist=context["artist"])
         return context
 
 

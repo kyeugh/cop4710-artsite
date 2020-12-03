@@ -91,7 +91,7 @@ class Collection(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return "{0.name} by {0.artist.username}".format(self)
+        return "{0.name}, curated by {0.artist.username}".format(self)
 
-# class CollectionArtworks(models.Model):
- #   collection =
+    def get_absolute_url(self):
+        return f"/collections/{self.slug}"
