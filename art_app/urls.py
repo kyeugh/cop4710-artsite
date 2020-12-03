@@ -14,6 +14,7 @@ urlpatterns = [
     path("collections/<slug:slug>", views.CollectionDetailView.as_view(), name="collection-detail"),
     path("explore", views.explore, name="explore"),
     path("contest", views.contest, name="contest"),
+    path("leaderboard", views.leaderboard, name="leaderboard"),
     path("vote", views.vote, name="vote"),
     path("save", views.save, name="save"),
     path("new/collection", views.new_collection, name="new-collection")
