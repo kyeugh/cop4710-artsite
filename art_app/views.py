@@ -25,8 +25,8 @@ def index(request):
         created__gte=timezone.now().replace(
             hour=0, minute=0, second=0
         )
-    ).distinct()
-    hot = today.annotate(vote_count=Count('votes')).distinct().order_by('-votes')[:10]
+    ).all()
+    hot = sorted(today, key=lambda t: t.total_votes, reverse=True)[:10]
     if request.user.is_authenticated:
         user_collections = Collection.objects.filter(artist=request.user)
     else:
