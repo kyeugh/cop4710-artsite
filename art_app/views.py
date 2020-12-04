@@ -20,7 +20,6 @@ from django.db.models import F, Count
 
 # Create your views here.
 def index(request):
-
     latest = Artwork.objects.all().order_by('-created')[:10]
     today = Artwork.objects.filter(created__gte=timezone.now().replace(
         hour=0, minute=0, second=0)).distinct()
@@ -107,20 +106,29 @@ def save(request):
 
 
 def contest(request):
-    #artworks = Artwork.objects.filter(tags="paint")
-    # needs to filter by the tag instead of getting all
-    artworks = Artwork.objects.all().order_by('-votes')[:10]
-    return render(request, "contest.html", {"artworks": artworks})
-    # def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    context["artworks"] = Artwork.objects.filter(tags__in=[context["tag"]])
-    #    return context
+    contestName = "paint"
+    tagId = Tag.objects.get(name=contestName)
+    artworks = Artwork.objects.filter(
+        tags__in=[tagId]).order_by('-votes')[:10]
+    return render(request, "contest.html", {"artworks": artworks, "contestName": contestName})
 
 
 def leaderboard(request):
     # need to order artists by the number of votes that they got
+    artists = Artist.objects.all()
+    topArtists = artists
+    topArtists.clear()
+    artistsArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for artist in artists:
+        votes = Votes.objects.filter(name=artist).count()
+        for pv in artistsArr:
+            if votes > pv:
+                artistsArr.remove(pv)
+                artistsArr.append(votes)
+                topArtists.append(artist)
+
     artists = Artist.objects.all()  # .order_by('-votes')[:10]
-    return render(request, "leaderboard.html", {"artists": artists})
+    return render(request, "leaderboard.html", {"artists": topArtists})
 
 
 @login_required

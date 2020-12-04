@@ -93,5 +93,7 @@ class Collection(models.Model):
     def __str__(self):
         return "{0.name} by {0.artist.username}".format(self)
 
-# class CollectionArtworks(models.Model):
- #   collection =
+
+class Votes(models.Model):
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artwork = models.ForeignKey(Artwork, on_delete=models.CASCADE)
