@@ -67,7 +67,7 @@ def new_artwork(request):
             artwork.votes.add(request.user)
             artwork.save()
 
-            return redirect("home")
+            return redirect(artwork.get_absolute_url())
     else:
         form = ArtworkForm()
     return render(request, "upload.html", {"form": form})
@@ -185,39 +185,20 @@ def CreateCollection(request):
 
 def leaderboard(request):
     # need to order artists by the number of votes that they got
-    artists = Artist.objects.all()  # .order_by('-votes')[:10]
-    return render(request, "leaderboard.html", {"artists": artists})
+    artists = Artist.objects.all()
+    top_artists = sorted(artists, key=lambda x: x.total_votes, reverse=True)
+    return render(request, "leaderboard.html", {"artists": top_artists})
 
 
 @login_required
-def CreateCollection(request):
-    collections = Collection.objects.all()
+@require_POST
+def delete(request):
     if request.method == "POST":
-        form = CollectionForm(request.POST)
-        if form.is_valid():
-            collection = form.save(commit=False)
-            collection.name = form.cleaned_data.get("name")
-            collection.artist = request.user
-            collection.save()
+        artwork = get_object_or_404(Artwork, slug=request.POST.get("artwork-slug", None))
+        if request.user == artwork.artist:
+            artwork.delete()
 
-            return redirect("collections")
-
-    else:
-        form = CollectionForm()
-    return render(request, "collections.html", {"form": form, "collections": collections})
-
-#tiffany
-@login_required
-def delete_art(request, pk):
-     Artwork.objects.filter(id=pk).delete()
-
-     items = Artwork.objects.all()
-
-     context = {
-        "items": items
-     }
-
-     return render(request, "artwork_detail.html", context)
+    return redirect('home')
 
 class ArtworkDetailView(DetailView):
     model = Artwork
