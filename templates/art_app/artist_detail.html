@@ -4,8 +4,17 @@
 
 {% block content %}
     <h1><a href="{{ artist.get_absolute_url }}">{{ artist.username }}</a></h1>
+    {% if artist == user %}
+        <ul>
+            <li><a href="{% url 'upload' %}">Upload new artwork</a></li>
+            <li><a href="{% url 'new-collection' %}">Create new collection</a></li>
+        </ul>
+    {% endif %}
     {% include 'utils/artspan.html' with artworks=artworks %}
+    <h2>Collections</h2>
+    <ul>
+        {% for collection in collections %}
+        <li><a href="{{ collection.get_absolute_url }}">{{ collection.name }}</a></li>
+        {% endfor %}
+    </ul>
 {% endblock %}
-
-
-    

@@ -11,12 +11,28 @@
     <p>Posted {{ artwork.created }}</p>
     <a href="{{ artwork.image.url }}"><img src="{{ artwork.image.url }}" class="artwork-full" /></a>
     <section class="details">
-        <span class="votes">
-            {% csrf_token %}
-            <button type="submit" name="{{ artwork.slug }}" class="vote-button{% if artwork|liked_by:user %} liked{% endif %}""></button>
-            <p id="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
+        <span class="interactions">
+            <span class="votes">
+                {% csrf_token %}
+                <button type="submit" name="{{ artwork.slug }}" class="vote-button vote-button-{{artwork.slug}}{% if artwork|liked_by:user %} liked{% endif %}""></button>
+                <p class="votes-{{ artwork.slug }}">{{ artwork.total_votes }}</p>
+            </span>
+            {% if user.is_authenticated %}
+            <form id="saveToCollection" name="{{ artwork.slug }}">
+                <label for="userCollections">Save artwork to collection:</label>
+                <select id="userCollections">
+                    <option disabled selected value></option>
+                    {% for collection in user_collections %}
+                    <option value="{{ collection.slug }}">{{ collection.name }}</option>
+                    {% endfor %}
+                
+                {% csrf_token %}
+                </select>
+                <button type="submit" name="{{ artwork.slug }}" class="save-button">⊕</button>
+            </form>
+            {% endif %}
         </span>
-        <p>{{ artwork.caption }}</p>
+        <p class="caption">{{ artwork.caption }}</p>
         <span class="tags">
             <h3>Tags:</h3>
             <ul class="tags">
@@ -28,6 +44,27 @@
         
     </section>
     <script>
-        {% include 'utils/vote.js' %}
+        $("#saveToCollection").submit(function(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const artworkSlug = $(this).attr("name")
+            const collectionSlug = $(this).find('select option:selected').attr("value")
+            $.ajax({
+                type: "POST",
+                url: "{% url 'save' %}",
+                data: {
+                    "artwork-slug": artworkSlug,
+                    "collection-slug": collectionSlug,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}"
+                },
+                dataType: "json",
+                success: function(response) {
+                    if(response["added"])
+                        window.location.href = response["added"];
+                    else
+                        alert("That artwork is already in that collection, so it was not added.")
+                }
+            });
+        });
     </script>
 {% endblock %}

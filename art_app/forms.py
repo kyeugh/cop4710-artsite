@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import Artwork, Collection
 
-
 class RegistrationForm(UserCreationForm):
     pronouns = forms.ChoiceField(
         choices=(
@@ -18,17 +17,17 @@ class RegistrationForm(UserCreationForm):
         model = get_user_model()
         fields = ("username", "email", "pronouns", "password1", "password2")
 
-
 class ArtworkForm(forms.ModelForm):
     """Form to submit a new Artwork."""
-    tags = forms.CharField()
+    tags = forms.CharField(help_text="Enter a comma-separated list of tags.")
 
     class Meta:
         model = Artwork
         fields = ("image", "title", "caption")
 
-
 class CollectionForm(forms.ModelForm):
+    tags = forms.CharField(help_text="Enter a comma-separated list of tags.")
+
     class Meta:
         model = Collection
         fields = ("name",)

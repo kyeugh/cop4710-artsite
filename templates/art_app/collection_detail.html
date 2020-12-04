@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ collection }} - artdock{% endblock %}
+
+{% block content %}
+    <h1><a href="{{ collection.get_absolute_url }}">{{ collection.name }}</a></h1>
+    <p>A collection curated by <a href="{{ collection.artist.get_absolute_url }}">{{ collection.artist.username }}</a>.</p>
+    <ul class="tags">
+        {% for tag in collection.tags.all %}
+            <li><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
+    {% include 'utils/artspan.html' with artworks=artworks %}
+{% endblock %}
