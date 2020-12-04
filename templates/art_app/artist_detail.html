@@ -8,8 +8,20 @@
         <ul>
             <li><a href="{% url 'upload' %}">Upload new artwork</a></li>
             <li><a href="{% url 'new-collection' %}">Create new collection</a></li>
+            <li><a href="{% url 'edit-profile' %}">Edit profile</a></li>
         </ul>
     {% endif %}
+    <dl>
+        <dt>Pronouns</dt>
+        <dd>{{ pronouns }}</dd>
+        {% if artist.bio %}
+        <dt>Bio</dt>
+        <dd>{{ artist.bio }}</dd>
+        {% endif %}{% if artist.location %}
+        <dt>Location</dt>
+        <dd>{{ artist.location }}</dd>
+        {% endif %}
+    </dl>
     {% if artworks %}
     {% include 'utils/artspan.html' with artworks=artworks %}
     {% else %}{% if artist == user %}

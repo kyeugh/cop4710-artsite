@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 
 from django.views.generic.detail import DetailView
 
-from art_app.forms import RegistrationForm, ArtworkForm, CollectionForm
+from art_app.forms import RegistrationForm, ArtworkForm, CollectionForm, EditProfileForm
 from art_app.models import *
 from django.db.models import F, Count
 
@@ -47,6 +47,20 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, "registration/register.html", {"form": form})
+
+def edit_profile(request):
+    user = request.user
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user.pronouns = int(form.cleaned_data.get("pronouns"))
+            user.bio = form.cleaned_data.get("bio")
+            user.location = form.cleaned_data.get("location")
+            user.save()
+            return redirect(user.get_absolute_url())
+    else:
+        form = EditProfileForm(initial={"pronouns": user.pronouns, "bio": user.bio, "location": user.location})
+        return render(request, "registration/edit.html", {"form": form})
 
 
 @login_required
@@ -229,6 +243,8 @@ class ArtistDetailView(DetailView):
         context["artworks"] = Artwork.objects.filter(artist=context["artist"])
         context["collections"] = Collection.objects.filter(
             artist=context["artist"])
+        pronouns_map = {1: "they/them", 2: "he/him", 3: "she/her"}
+        context["pronouns"] = pronouns_map[context["artist"].pronouns]
         return context
 
 

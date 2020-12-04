@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Artwork, Collection
+from .models import Artwork, Artist, Collection
 
 
 class RegistrationForm(UserCreationForm):
@@ -17,6 +17,19 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         fields = ("username", "email", "pronouns", "password1", "password2")
+
+class EditProfileForm(forms.ModelForm):
+    pronouns = forms.ChoiceField(
+        choices=(
+            (1, "they/them"),
+            (2, "he/him"),
+            (3, "she/her")
+        )
+    )
+
+    class Meta:
+        model = Artist
+        fields = ("bio", "location", "pronouns")
 
 
 class ArtworkForm(forms.ModelForm):
