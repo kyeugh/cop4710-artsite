@@ -20,5 +20,6 @@ urlpatterns = [
     path("vote", views.vote, name="vote"),
     path("save", views.save, name="save"),
     path("new/collection", views.new_collection, name="new-collection"),
-    path("delete", views.delete_art, name="delete-art")
+    path("delete", views.delete_art, name="delete-art"),
+    path("search", views.search, name="search")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

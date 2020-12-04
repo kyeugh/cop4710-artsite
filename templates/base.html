@@ -28,6 +28,9 @@
             <li><a href="{% url 'logout' %}">Log Out</a></li>
         {% endif %}
         </ul>
+        <form action="{% url 'search' %}" method="GET">
+            <input type="text" placeholder="Search..." name="q" />
+        </form>
     </nav>
     {% endblock %}
     <main>
@@ -35,5 +38,6 @@
         {% endblock %}
     </main>
     {% include 'utils/vote.js.html' %}
+    {% include 'utils/search.js.html' %}
 </body>
 </html>

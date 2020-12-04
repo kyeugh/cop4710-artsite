@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Search results - artdock{% endblock %}
+
+{% block content %}
+<h1>Search results</h1>
+<h2>Artworks</h2>
+{% if artworks %}
+{% include 'utils/artspan.html' with artworks=artworks %}
+{% else %}<p>No results.</p>{% endif %}
+
+<h2>Artists</h2>
+{% if artists %}
+<ul>
+    {% for artist in artists %}
+    <li><a href="{{ artist.get_absolute_url }}">{{ artist.username }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}<p>No results.</p>{% endif %}
+
+<h2>Collections</h2>
+{% if collections %}
+<ul>
+    {% for collection in collections %}
+    <li><a href="{{ collection.get_absolute_url }}">{{ collection.name }}</a> by <a href="{{ collection.artist.get_absolute_url }}">{{ collection.artist.username }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}<p>No results.</p>{% endif %}
+
+<h2>Tags</h2>
+{% if tags %}
+<ul class="tags">
+    {% for tag in tags %}
+    <li><a href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}<p>No results.</p>{% endif %}
+{% endblock %}

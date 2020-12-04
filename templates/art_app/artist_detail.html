@@ -10,11 +10,19 @@
             <li><a href="{% url 'new-collection' %}">Create new collection</a></li>
         </ul>
     {% endif %}
+    {% if artworks %}
     {% include 'utils/artspan.html' with artworks=artworks %}
+    {% else %}{% if artist == user %}
+    <p>You don't have any artworks.  Why not <a href="{% url 'upload' %}">post some</a>?</p>
+    {% else %}<p>No artworks yet.</p>{% endif %}{% endif %}
     <h2>Collections</h2>
+    {% if collections %}
     <ul>
         {% for collection in collections %}
         <li><a href="{{ collection.get_absolute_url }}">{{ collection.name }}</a></li>
         {% endfor %}
     </ul>
+    {% else %}{% if artist == user %}
+    <p>You don't have any collections yet.  Why not <a href="{% url 'new-collection' %}">create one</a>?</p>
+    {% else %}<p>No collections yet.</p>{% endif %}{% endif %}
 {% endblock %}

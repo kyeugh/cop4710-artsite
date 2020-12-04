@@ -142,6 +142,14 @@ def collections(request):
     all_collections = Collection.objects.all()
     return render(request, "collections.html", {"collections": all_collections})
 
+def search(request):
+    query = request.GET.get("q")
+    artworks = Artwork.objects.filter(title__icontains=query)
+    artists = Artist.objects.filter(username__icontains=query)
+    collections = Collection.objects.filter(name__icontains=query)
+    tags = Tag.objects.filter(name__icontains=query)
+    return render(request, "search.html", {"artworks": artworks, "artists": artists, "collections": collections, "tags": tags})
+
 def contest(request):
     contestName = "paint"
     tagId = Tag.objects.get(name=contestName)

@@ -51,6 +51,10 @@ nav > ul > li {
   padding: 0 2rem;
 }
 
+nav > form {
+  margin-left: auto;
+}
+
 /* main */
 
 main {
