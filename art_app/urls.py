@@ -13,12 +13,12 @@ urlpatterns = [
     path("tags/<slug:slug>", views.TagDetailView.as_view(), name="tag-detail"),
     path("collections/<slug:slug>",
          views.CollectionDetailView.as_view(), name="collection-detail"),
-    path("collections", views.CreateCollection, name="collections"),
-    path("explore", views.explore, name="explore"),
+    path("collections", views.collections, name="collections"),
+    path("tags", views.explore, name="tags"),
     path("contest", views.contest, name="contest"),
     path("leaderboard", views.leaderboard, name="leaderboard"),
     path("vote", views.vote, name="vote"),
     path("save", views.save, name="save"),
-    path("new/collection", views.new_collection, name="new-collection")
+    path("new/collection", views.new_collection, name="new-collection"),
     path("delete", views.delete_art, name="delete-art")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

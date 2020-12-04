@@ -3,26 +3,10 @@
 {% block title %}Collections - artdock{% endblock %}
 
 {% block content %}
-    
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-          <p>
-            {{ field.label_tag }}<br>
-            {{ field }}
-            {% for error in field.errors %}
-              <p style="color: red">{{ error }}</p>
-            {% endfor %}
-          </p>
-        {% endfor %}
-        <button type="submit">Create Collection</button>
-      </form>
-
-      <ul>
-        {% for collection in collections %}
-            <li><a href="{{ collection.get_absolute_url }}">{{ collection }}</a></li>
-            <!--Need to get the correct artworks that belong to the collectionS-->
-            {% include 'utils/artspan.html' with artworks=collection.artwork_id %}
-        {% endfor %}
-    </ul>
+<h1>Explore collections</h1>
+<ul>
+  {% for collection in collections %}
+    <li><a href="{{ collection.get_absolute_url }}">{{ collection.name }}</a> by <a href="{{ collection.artist.get_absolute_url }}">{{ collection.artist.username }}</a></li>
+  {% endfor %}
+</ul>
 {% endblock %}

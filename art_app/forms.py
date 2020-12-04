@@ -29,6 +29,7 @@ class ArtworkForm(forms.ModelForm):
 
 
 class CollectionForm(forms.ModelForm):
+    tags = forms.CharField(help_text="Enter a comma-separated list of tags.")
     class Meta:
         model = Collection
         fields = ("name",)

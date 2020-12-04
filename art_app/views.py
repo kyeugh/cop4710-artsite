@@ -26,7 +26,7 @@ def index(request):
             hour=0, minute=0, second=0
         )
     ).distinct()
-    hot = today.annotate(vote_count=Count('votes')).order_by('-votes')[:10]
+    hot = today.annotate(vote_count=Count('votes')).distinct().order_by('-votes')[:10]
     if request.user.is_authenticated:
         user_collections = Collection.objects.filter(artist=request.user)
     else:
@@ -75,7 +75,6 @@ def new_artwork(request):
 
 @login_required
 def new_collection(request):
-    collections = Collection.objects.all()
     if request.method == "POST":
         form = CollectionForm(request.POST)
         if form.is_valid():
@@ -96,7 +95,7 @@ def new_collection(request):
 
     else:
         form = CollectionForm()
-    return render(request, "create-collection.html", {"form": form, "collections": collections})
+    return render(request, "create-collection.html", {"form": form})
 
 
 def explore(request):
@@ -139,6 +138,9 @@ def save(request):
         collection.save()
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
+def collections(request):
+    all_collections = Collection.objects.all()
+    return render(request, "collections.html", {"collections": all_collections})
 
 def contest(request):
     contestName = "paint"
@@ -151,8 +153,7 @@ def contest(request):
 
 def leaderboard(request):
     # need to order artists by the number of votes that they got
-    artists = Artist.objects.all()
-    topArtists = sorted(artists, key=lambda t: t.total_votes)
+    topArtists = sorted(Artist.objects.all(), key=lambda t: t.total_votes, reverse=True)
     return render(request, "leaderboard.html", {"artists": topArtists})
 
 

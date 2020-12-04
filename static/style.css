@@ -199,3 +199,15 @@ ul.tags > li > a {
 ul.tags > li {
   margin: 0 0.25rem;
 }
+
+/* leaderboard */
+ol.leaderboard > li > span {
+  display: flex;
+  max-width: 20%;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+o.leaderboard > li > span > p {
+  display: block;
+}

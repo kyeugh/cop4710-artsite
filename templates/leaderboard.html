@@ -4,9 +4,9 @@
 
 {% block content %}
     <h1>Artists with the most all-time votes:</h1>
+    <ol class="leaderboard">
     {% for artist in artists %}
-        <ol>
-            <li>{{artist}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Votes: {{artist.total_votes}}</li>
-        </ol>
+            <li><span><a href="{{ artist.get_absolute_url }}">{{artist}}</a><p>Votes: {{artist.total_votes}}</p></span></li>
     {% endfor %}
+    </ol>
 {% endblock %}
