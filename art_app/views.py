@@ -151,6 +151,42 @@ def contest(request):
     #    return context
 
 
+def leaderboard(request):
+    # need to order artists by the number of votes that they got
+    artists = Artist.objects.all()  # .order_by('-votes')[:10]
+    return render(request, "leaderboard.html", {"artists": artists})
+
+
+@login_required
+def CreateCollection(request):
+    collections = Collection.objects.all()
+    if request.method == "POST":
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.name = form.cleaned_data.get("name")
+            collection.artist = request.user
+            collection.save()
+
+            return redirect("collections")
+
+    else:
+        form = CollectionForm()
+    return render(request, "collections.html", {"form": form, "collections": collections})
+
+#tiffany
+@login_required
+def delete_art(request, pk):
+     Artwork.objects.filter(id=pk).delete()
+
+     items = Artwork.objects.all()
+
+     context = {
+        "items": items
+     }
+
+     return render(request, "artwork_detail.html", context)
+
 class ArtworkDetailView(DetailView):
     model = Artwork
 
