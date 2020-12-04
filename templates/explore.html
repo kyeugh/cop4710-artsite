@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}artdock{% endblock %}
+
+{% block content %}
+    <h1>Tags: </h1>
+    <span class="tags">
+        <ul>
+            {% for tag in tags %}
+                <li><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></li>
+            {% endfor %}
+        </ul>
+    </span>
+{% endblock %}
