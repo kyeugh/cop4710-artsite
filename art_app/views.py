@@ -20,13 +20,12 @@ from django.db.models import F, Count
 
 # Create your views here.
 def index(request):
-
     latest = Artwork.objects.all().order_by('-created')[:10]
     today = Artwork.objects.filter(
         created__gte=timezone.now().replace(
             hour=0, minute=0, second=0
-            )
-        ).distinct()
+        )
+    ).distinct()
     hot = today.annotate(vote_count=Count('votes')).order_by('-votes')[:10]
     if request.user.is_authenticated:
         user_collections = Collection.objects.filter(artist=request.user)
@@ -124,6 +123,7 @@ def vote(request):
     ctx = {"votes_count": artwork.total_votes, "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
+
 @login_required
 @require_POST
 def save(request):
@@ -141,14 +141,37 @@ def save(request):
 
 
 def contest(request):
-    #artworks = Artwork.objects.filter(tags="paint")
-    # needs to filter by the tag instead of getting all
-    artworks = Artwork.objects.all().order_by('-votes')[:10]
-    return render(request, "contest.html", {"artworks": artworks})
-    # def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    context["artworks"] = Artwork.objects.filter(tags__in=[context["tag"]])
-    #    return context
+    contestName = "paint"
+    tagId = Tag.objects.get(name=contestName)
+    artworks = Artwork.objects.filter(
+        tags__in=[tagId]).order_by('-votes')[:10]
+    artworks[0].votes.count()
+    return render(request, "contest.html", {"artworks": artworks, "contestName": contestName})
+
+
+def leaderboard(request):
+    # need to order artists by the number of votes that they got
+    artists = Artist.objects.all()
+    topArtists = sorted(artists, key=lambda t: t.total_votes)
+    return render(request, "leaderboard.html", {"artists": topArtists})
+
+
+@login_required
+def CreateCollection(request):
+    collections = Collection.objects.all()
+    if request.method == "POST":
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collection = form.save(commit=False)
+            collection.name = form.cleaned_data.get("name")
+            collection.artist = request.user
+            collection.save()
+
+            return redirect("collections")
+
+    else:
+        form = CollectionForm()
+    return render(request, "collections.html", {"form": form, "collections": collections})
 
 
 def leaderboard(request):
@@ -193,15 +216,18 @@ class ArtworkDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            context["user_collections"] = Collection.objects.filter(artist=self.request.user)
+            context["user_collections"] = Collection.objects.filter(
+                artist=self.request.user)
         return context
+
 
 class CollectionDetailView(DetailView):
     model = Collection
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["artworks"] = get_object_or_404(Collection, slug=context["collection"].slug).artworks.all()
+        context["artworks"] = get_object_or_404(
+            Collection, slug=context["collection"].slug).artworks.all()
         return context
 
 
@@ -211,7 +237,8 @@ class ArtistDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["artworks"] = Artwork.objects.filter(artist=context["artist"])
-        context["collections"] = Collection.objects.filter(artist=context["artist"])
+        context["collections"] = Collection.objects.filter(
+            artist=context["artist"])
         return context
 
 

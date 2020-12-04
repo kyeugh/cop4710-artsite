@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Contest - artdock{% endblock %}
+
+{% block content %}
+    <h1>Contest for week of: 11/30</h1>
+    <h2>This weeks tag: <a href="/tags/paint">{{ contestName }}</a></h2>
+    <p>Instructions: Upload your best artwork for the relevant category using the tag for the current contest.
+        The artwork with the most votes when the contest ends is the winner.
+    </p>
+    {% include 'utils/artspan.html' with artworks=artworks %}
+    
+{% endblock %}

@@ -21,6 +21,14 @@ class Artist(AbstractUser):
         default=1
     )
 
+    @property
+    def total_votes(self):
+        voteCount = 0
+        artworks = Artwork.objects.filter(artist=self)
+        for art in artworks:
+            voteCount += art.total_votes
+        return voteCount
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = get_unique_slug(self, 'username', 'slug')
