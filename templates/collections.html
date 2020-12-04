@@ -20,7 +20,7 @@
 
       <ul>
         {% for collection in collections %}
-            <li>{{ collection }}</li>
+            <li><a href="{{ collection.get_absolute_url }}">{{ collection }}</a></li>
             <!--Need to get the correct artworks that belong to the collectionS-->
             {% include 'utils/artspan.html' with artworks=collection.artwork_id %}
         {% endfor %}
