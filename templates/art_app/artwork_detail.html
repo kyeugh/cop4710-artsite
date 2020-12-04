@@ -43,7 +43,7 @@
         </span>
         <span class="delete">
             {% if request.user == artwork.artist %}
-                
+                <li><a href = "{{ artwork.slug }}" class = "delete-art" role = "button"></a></li>
             {% endif %}
         </span>
         
